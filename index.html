@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dynamic Project Gallery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background-color: #212529;
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar.hide {
+            transform: translateX(-270px);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            color: #0d6efd;
+        }
+
+        .sidebar a:hover {
+            background-color: #0d6efd;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+            height: calc(100vh - 60px);
+            background: #ecf0f1;
+            transition: margin-left 0.3s ease-in-out;
+            overflow-y: auto;
+        }
+
+        .content.shift {
+            margin-left: 0;
+        }
+
+        .top-bar {
+            background-color: #212529;
+            padding: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 1030;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            position: relative;
+        }
+
+        .search-icon {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            display: none;
+            width: 150px;
+            padding: 5px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+            margin-left: 5px;
+        }
+
+        .message-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .task-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            min-height: 300px;
+        }
+
+        .dark-mode {
+            background: #1c1c1c;
+            color: white;
+        }
+
+        .dark-mode .sidebar {
+            background: #333;
+        }
+
+        .dark-mode .content {
+            background: #121212;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 0%;
+            background: white;
+            color: black;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+        <i class="fas fa-bars menu-button" onclick="toggleSidebar()"></i>
+        <div class="search-container">
+            <i class="fas fa-search search-icon" onclick="toggleSearch()"></i>
+            <input type="text" class="search-bar" placeholder="Search..." onkeyup="searchProjects()">
+        </div>
+        <button class="btn btn-light ms-2" onclick="toggleDarkMode()">🌙</button>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <h2>TASKS</h2>
+        <div id="folder-list"></div>
+    </div>
+
+    <div class="content" id="main-content">
+        <div class="message-box">
+            <h4>Select a project to view its content.</h4>
+        </div>
+        <div class="task-content" id="task-content">
+            <p>Task content will be displayed here.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Follow me on
+            <a href="https://github.com" target="_blank"><i class="fab fa-github fa-2x"
+                    style="color: black; margin: 0 10px;"></i></a>
+            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin fa-2x"
+                    style="color: #0077b5; margin: 0 10px;"></i></a>
+        </p>
+    </div>
+
+    <script>
+        const projects = [
+            { "title": "Basic HTML Styling", "ref": "Task1.html" },
+            { "title": "CSS Hover Effects", "ref": "Task2.html" },
+            { "title": "Welcome to JS", "ref": "Task3.html" },
+            { "title": "JS Calculator", "ref": "Task4.html" },
+            { "title": "String Operations", "ref": "Task7.html" },
+            { "title": "Grade Calculator", "ref": "Task8.html" },
+            { "title": "Call Stack with Array", "ref": "Task9.html" },
+            { "title": "Class Work Loops", "ref": "Task10.html" },
+            { "title": "Class Work", "ref": "Task11.html" },
+            { "title": "Class Work Objects", "ref": "Task12.html" },
+            { "title": "Class Work Functions", "ref": "Task13.html" },
+            { "title": "Class & Bootstrap", "ref": "Task14.html" },
+            { "title": "Age Calculator", "ref": "Task15.html" }
+        ];
+
+        const folderList = document.getElementById("folder-list");
+        const taskContent = document.getElementById("task-content");
+
+        projects.forEach((project) => {
+            let projectItem = document.createElement("a");
+            projectItem.href = "#";
+            projectItem.innerHTML = `<i class="fas fa-tasks"></i> ${project.title}`;
+            projectItem.classList.add("task-item");
+            projectItem.onclick = (e) => {
+                e.preventDefault();
+                loadTaskContent(project.ref);
+            };
+            folderList.appendChild(projectItem);
+        });
+
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("hide");
+            document.getElementById("main-content").classList.toggle("shift");
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        function toggleSearch() {
+            let searchBar = document.querySelector('.search-bar');
+            searchBar.style.display = searchBar.style.display === 'block' ? 'none' : 'block';
+            searchBar.focus();
+        }
+
+        function searchProjects() {
+            const searchInput = document.querySelector('.search-bar').value.toLowerCase();
+            const folderItems = document.querySelectorAll('#folder-list a');
+            folderItems.forEach(item => {
+                const title = item.textContent.toLowerCase();
+                item.style.display = title.includes(searchInput) ? '' : 'none';
+            });
+        }
+
+        function loadTaskContent(taskRef) {
+            taskContent.innerHTML = `<iframe src="${taskRef}" width="100%" height="500px" frameborder="0"></iframe>`;
+        }
+    </script>
+
+</body>
+
+</html>
