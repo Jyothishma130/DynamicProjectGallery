@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            let studentEntries = [];
+
+            function insertInfo() {
+               
+                const name = document.getElementById("name").value;
+                const details = document.getElementById("id").value;
+                const year = document.getElementById("course").value;
+                const branch = document.getElementById("school").value;
+
+               
+                if (name && id && course && school) {
+                    const student = {
+                        name: name,
+                        details: details,
+                        year: year,
+                        branch: branch
+                    };
+
+                   
+                    studentEntries.push(student);
+
+                   
+                    document.getElementById("name").value = "";
+                    document.getElementById("id").value = "";
+                    document.getElementById("course").value = "";
+                    document.getElementById("school").value = "";
+
+                   
+                    document.getElementById("demo_div").innerHTML = "";
+                } else {
+                    document.getElementById("demo_div").innerHTML = "Please fill all fields!";
+                }
+            }
+
+            function showInfo() {
+                if (studentEntries.length > 0) {
+                    let output = "";
+                    studentEntries.forEach((student, index) => {
+                        output += `<p>I am ${student.name}. I am a ${student.id} in ${student.course} Branch from ${student.school}.</p>`;
+                    });
+                    document.getElementById("demo_div").innerHTML = output;
+                } else {
+                    document.getElementById("demo_div").innerHTML = "No information inserted yet. Please click 'Insert Info' first.";
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div>
+            <input id="name" placeholder="Enter Name"/>
+            <input id="id" placeholder="Enter id"/>
+            <input id="course" placeholder="Enter course" />
+            <input id="school" placeholder="Enter school" />
+        </div>
+
+        <button onclick="insertInfo();">Insert Info</button>
+
+        <button onclick="showInfo();">Show Info</button>
+
+        <div id="demo_div"></div>
+    </body>
+</html>
+
+

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            let studentEntries = [];
+
+            function Student(name, id, course, school) {
+                this.name = name;
+                this.id = id;
+                this.course = course;
+                this.school = school;
+            }
+
+            function insertInfo() {
+                let name = document.getElementById("name").value;
+                let id = document.getElementById("id").value;
+                let course = document.getElementById("course").value;
+                let school = document.getElementById("school").value;
+
+                if (name && id && course && school) {
+                    let student = new Student(name, id, course, school);
+                    studentEntries.push(student);
+
+                    document.getElementById("name").value = "";
+                    document.getElementById("id").value = "";
+                    document.getElementById("course").value = "";
+                    document.getElementById("school").value = "";
+
+                    document.getElementById("demo_div").innerHTML = "";
+                } else {
+                    document.getElementById("demo_div").innerHTML = "Please fill all fields!";
+                }
+            }
+
+            function showInfo() {
+                if (studentEntries.length > 0) {
+                    let output = "";
+                    studentEntries.forEach(student => {
+                        output += `<p>I am ${student.name}. I am a ${student.id} in ${student.course} Branch from ${student.school}.</p>`;
+                    });
+                    document.getElementById("demo_div").innerHTML = output;
+                } else {
+                    document.getElementById("demo_div").innerHTML = "No information inserted yet. Please click 'Insert Info' first.";
+                }
+            }
+
+            function showAll() {
+                showInfo();
+            }
+
+            function clearDisplay() {
+                document.getElementById("demo_div").innerHTML = "";
+            }
+        </script>
+    </head>
+    <body>
+        <div style="text-align: center; padding: 20px;">
+            <h2>Student Information</h2>
+            <table style="margin: auto; border-spacing: 10px;">
+                <tr>
+                    <td><input id="name" placeholder="Enter Name"/></td>
+                    <td><input id="id" placeholder="Enter ID"/></td>
+                </tr>
+                <tr>
+                    <td><input id="course" placeholder="Enter Course" /></td>
+                    <td><input id="school" placeholder="Enter School" /></td>
+                </tr>
+                <tr>
+                    <td><button onclick="insertInfo();" style="background-color: lightgreen; padding: 5px;">Insert Info</button></td>
+                    <td><button onclick="showInfo();" style="background-color: lightcoral; padding: 5px;">Show Info</button></td>
+                </tr>
+                <tr>
+                    <td><button onclick="showAll();" style="background-color: lightgreen; padding: 5px;">Show All</button></td>
+                    <td><button onclick="clearDisplay();" style="background-color: lightcoral; padding: 5px;">Clear Display</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="demo_div" style="margin-top: 20px; text-align: center;"></div>
+    </body>
+</html>
